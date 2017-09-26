@@ -10,7 +10,9 @@ if (! function_exists('authApiField')) {
         if ( isset($request['id']) && isset($request['token'])) {
             $check = md5(env('APP_KEY') . $request['id']);
 
-            return true;
+            if ( $check == $request['token'] ) {
+                return true;
+            }
         }
 
         return false;
