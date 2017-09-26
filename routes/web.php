@@ -15,9 +15,13 @@
 //student api
 Route::group(['prefix' => 'api'], function () {
 	Route::group(['prefix' => 'student'], function () {
-		Route::get('introduction', 'Student\ApiController@introduction');
-		Route::get('education', 'Student\ApiController@education');
-		Route::get('work', 'Student\ApiController@work');
-		Route::get('web', 'Student\ApiController@web');
+        Route::get('activity', 'Student\ApiController@activity');
+        Route::get('workCourse', 'Student\ApiController@workCourse');
+        Route::get('honoraryRecord', 'Student\ApiController@honoraryRecord');
+        Route::get('workProject', 'Student\ApiController@workProject');
+        Route::get('myGalleryDetail', 'Student\ApiController@myGalleryDetail');
+        Route::get('myGallery', 'Student\ApiController@myGallery');
+        Route::get('earlyWarning', 'Student\ApiController@earlyWarning');
+		Route::get('shareSearch', 'Student\ApiController@shareSearch');
 	});
 });

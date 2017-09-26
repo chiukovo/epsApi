@@ -3,13 +3,6 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
-use App\Repositories\IntroductionRepositories;
-use App\Repositories\ProfileWebRepositories;
-use App\Repositories\EducationRepositories;
-use App\Repositories\WorkexpRepositories;
-use App\Repositories\StudyRepositories;
-use App\Repositories\AbsentRepositories;
-use App\Repositories\ServiceRepositories;
 use App\Repositories\ActivityRepositories;
 use App\Repositories\CommunityRepositories;
 use App\Repositories\GadreRepositories;
@@ -22,21 +15,31 @@ use App\Repositories\RaceRepositories;
 use App\Repositories\ExhiRepositories;
 use App\Repositories\PerworksRepositories;
 use App\Repositories\ShowRepositories;
+use App\Repositories\AlbumRepositories;
+use App\Repositories\AlbumNameRepositories;
+use App\Repositories\ShareRepositories;
+use App\Services\GalleryServices;
 use Request;
 
 class ApiController extends Controller
 {
     /*
-     * 個人簡歷
+     * 活動歷程
      */
-    public function introduction()
+    public function activity()
     {
         $request = Request::input();
 
         if ( authApiField($request) ) {
+            $userId = $request['id'];
+
             return [
                 'status' => 'success',
-                'data' => IntroductionRepositories::getByFilters(['Stu_Id' => $request['id']])
+                'data' => [
+                    'record' => ActivityRepositories::getByFilters(['Stu_Id' => $userId]),
+                    'community' => CommunityRepositories::getByFilters(['Stu_Id' => $userId]),
+                    'cadre' => GadreRepositories::getByFilters(['Stu_Id' => $userId]),
+                ]
             ];
         }
 
@@ -47,16 +50,22 @@ class ApiController extends Controller
     }
 
     /*
-     * 學歷
+     * 職涯歷程
      */
-    public function education()
+    public function workCourse()
     {
         $request = Request::input();
 
         if ( authApiField($request) ) {
+            $userId = $request['id'];
+
             return [
                 'status' => 'success',
-                'data' => EducationRepositories::getByFilters(['Stu_Id' => $request['id']])
+                'data' => [
+                    'lice' => LiceRepositories::getByFilters(['Stu_Id' => $userId]),
+                    'parc' => ParcRepositories::getByFilters(['Stu_Id' => $userId]),
+                    'read' => ReadRepositories::getByFilters(['Stu_Id' => $userId]),
+                ]
             ];
         }
 
@@ -67,16 +76,22 @@ class ApiController extends Controller
     }
 
     /*
-     * 工作經驗
+     * 榮譽記錄
      */
-    public function work()
+    public function honoraryRecord()
     {
         $request = Request::input();
 
         if ( authApiField($request) ) {
+            $userId = $request['id'];
+
             return [
                 'status' => 'success',
-                'data' => WorkexpRepositories::getByFilters(['Stu_Id' => $request['id']])
+                'data' => [
+                    'Schship' => SchshipRepositories::getByFilters(['Stu_Id' => $userId]),
+                    'Race' => RaceRepositories::getByFilters(['Stu_Id' => $userId]),
+                    'RandP' => RandPRepositories::getByFilters(['Stu_Id' => $userId]),
+                ]
             ];
         }
 
@@ -87,16 +102,128 @@ class ApiController extends Controller
     }
 
     /*
-     * 個人網址
+     * 作品專區
      */
-    public function web()
+    public function workProject()
     {
         $request = Request::input();
 
         if ( authApiField($request) ) {
+            $userId = $request['id'];
+
             return [
                 'status' => 'success',
-                'data' => ProfileWebRepositories::getByFilters(['Stu_Id' => $request['id']])
+                'data' => [
+                    'Perworks' => PerworksRepositories::getJoinAlbumByFilters(['tbStu_Perworks.Stu_Id' => $userId]),
+                    'Exhi' => ExhiRepositories::getByFilters(['Stu_Id' => $userId]),
+                    'Show' => ShowRepositories::getByFilters(['Stu_Id' => $userId]),
+                ]
+            ];
+        }
+
+        return [
+            'status' => 'error',
+            'message' => 'key auth fail'
+        ];
+    }
+
+    /*
+     * 照片資料
+     */
+    public function myGalleryDetail()
+    {
+        $request = Request::input();
+
+        if ( authApiField($request) && isset($request['folderId']) ) {
+            $userId = $request['id'];
+
+            return [
+                'status' => 'success',
+                'data' => [
+                    'photo' => AlbumRepositories::getByFilters([
+                        'tbStu_Album.Folder_Name_Id' => $request['folderId'],
+                        'tbStu_Album.Stu_Id' => $userId,
+                    ]),
+                ]
+            ];
+        }
+
+        return [
+            'status' => 'error',
+            'message' => 'key auth fail'
+        ];
+    }
+
+    /*
+     * 個人相簿
+     */
+    public function myGallery()
+    {
+        $request = Request::input();
+
+        if ( authApiField($request) ) {
+            $userId = $request['id'];
+            $pId = isset($request['folderId']) ? $request['folderId'] : 0;
+
+            $gallery = AlbumNameRepositories::getJoinAlbumByFilters([
+                'tbStu_Album_Name.Stu_Id' => getUserId(),
+                'tbStu_Album_Name.P_Id' => $pId,
+            ]);
+
+            return [
+                'status' => 'success',
+                'data' => [
+                    GalleryServices::getPidGroup($gallery)
+                ]
+            ];
+        }
+
+        return [
+            'status' => 'error',
+            'message' => 'key auth fail'
+        ];
+    }
+
+    /*
+     * 預警與輔導
+     */
+    public function earlyWarning()
+    {
+        $request = Request::input();
+
+        if ( authApiField($request) ) {
+            $userId = $request['id'];
+
+            return [
+                'status' => 'success',
+                'data' => [
+                    'scoreNotPass' => uspScoreSemsNotpass(),
+                    'record' => epsTeacherConsult(getUserId()),
+                ]
+            ];
+        }
+
+        return [
+            'status' => 'error',
+            'message' => 'key auth fail'
+        ];
+    }
+
+    /*
+     * 分享搜尋
+     */
+    public function shareSearch()
+    {
+        $request = Request::input();
+
+        if ( authApiField($request) && isset($request['search']) ) {
+            $userId = $request['id'];
+
+            return [
+                'status' => 'success',
+                'data' => [
+                    ShareRepositories::searchTitle($request['search'])
+                ]
             ];
         }
 
