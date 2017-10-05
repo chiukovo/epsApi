@@ -163,10 +163,9 @@ if (! function_exists('getTeacherData')) {
      */
     function getTeacherData($teacher_code, $sems)
     {
-        $db = DB::select(DB::raw("exec Academic.dbo.eps_teacher_data :sems, :teacher_code, :teacher_id"),[
+        $db = DB::select(DB::raw("exec Academic.dbo.eps_teacher_data :sems, :teacher_code"),[
             ':sems' => $sems,
             ':teacher_code' => $teacher_code,
-            ':teacher_id' => 0,
         ]);
 
         $db = json_decode(json_encode($db), true);
@@ -222,6 +221,57 @@ if (! function_exists('spScorePrintSems')) {
             ':dept_sno' => 0,
             ':dept_group' => 0,
             ':std_no' => $std_no,
+        ]);
+
+        $db = json_decode(json_encode($db), true);
+
+        if ( ! empty($db)) {
+            return $db;
+        } else {
+            return [];
+        }
+    }
+}
+
+if (! function_exists('spStdAbsence')) {
+    /**
+     * 可得到總缺課
+     *
+     * @return array
+     */
+    function spStdAbsence($std_no)
+    {
+        $sems = getNowSems();
+
+        $db = DB::select(DB::raw("exec Academic.dbo.sp_std_absence :sems, :std_no"),[
+            ':sems' => $sems['year'] . $sems['sems'],
+            ':std_no' => $std_no,
+        ]);
+
+        $db = json_decode(json_encode($db), true);
+
+        if ( ! empty($db)) {
+            return $db;
+        } else {
+            return [];
+        }
+    }
+}
+
+if (! function_exists('epsCourseSems')) {
+    /**
+     * 會得到課程名稱，上課時數，上課地點
+     *
+     * @return array
+     */
+    function epsCourseSems()
+    {
+        $sems = getNowSems();
+
+        $db = DB::select(DB::raw("exec Academic.dbo.eps_course_sems :sems, :dept_sno, :dept_group_sno"),[
+            ':sems' => $sems['year'] . $sems['sems'],
+            ':dept_sno' => 0,
+            ':dept_group_sno' => 0,
         ]);
 
         $db = json_decode(json_encode($db), true);
