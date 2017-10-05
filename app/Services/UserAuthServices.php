@@ -16,10 +16,10 @@ class UserAuthServices
         $type = $userPost['type'];
 
         if ( $type == 'student' ) {
-            $auth = studentAuth($userPost['username'], $userPost['password']);
+            $auth = studentAuth($userPost['id'], $userPost['password']);
 
             if ($auth == 'Y') {
-                $student = getStudentData($userPost['username'], $yearSems['std_card_sems']);
+                $student = getStudentData($userPost['id'], $yearSems['std_card_sems']);
 
                 if ( empty($student) ) {
                     return [
@@ -35,7 +35,7 @@ class UserAuthServices
             }
         } else {
             //teacher wip
-            $teacher = getTeacherData($userPost['username'], $yearSems['std_card_sems']);
+            $teacher = getTeacherData($userPost['id'], $yearSems['std_card_sems']);
 
             if ( empty($teacher) ) {
                 return [
