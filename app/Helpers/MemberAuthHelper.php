@@ -10,13 +10,9 @@ if (! function_exists('getStudentPhotoUrl')) {
         $memberId = $std_no == '' ? getUserId() : $std_no;
         $time = date('YmdHi');
         //1 = auth member id 功能好了要改掉
-        $imgPath = asset(env('UPLOAD_FOLDER_NAME') . '/' . $memberId . '/photo.jpg') . '?v=' . $time;
+        $imgPath = env('UPLOAD_FOLDER_NAME') . '/' . $memberId . '/photo.jpg' . '?v=' . $time;
 
-        $filePath = public_path(env('UPLOAD_FOLDER_NAME') . '/' . $memberId . '/photo.jpg');
-
-        $imgUrl = (is_file($filePath)) ? $imgPath : asset('image/not-use/nouser.jpg');
-
-        return $imgUrl;
+        return $imgPath;
     }
 }
 
@@ -30,12 +26,9 @@ if (! function_exists('getTeacherPhotoUrl')) {
         $memberId = $teacherId == '' ? getUserId() : $teacherId;
         $time = date('YmdHi');
         //1 = auth member id 功能好了要改掉
-        $imgPath = asset(env('UPLOAD_FOLDER_NAME') . '/' . $memberId . '/photo.jpg') . '?v=' . $time;
-        $filePath = public_path(env('UPLOAD_FOLDER_NAME') . '/' . $memberId . '/photo.jpg');
+        $imgPath = env('UPLOAD_FOLDER_NAME') . '/' . $memberId . '/photo.jpg' . '?v=' . $time;
 
-        $imgUrl = (is_file($filePath)) ? $imgPath : asset('image/not-use/nouser.jpg');
-
-        return $imgUrl;
+        return $imgPath;
     }
 }
 
