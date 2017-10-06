@@ -30,7 +30,14 @@ class UserAuthServices
 
                 return [
                     'status' => 'success',
-                    'msg' => '',
+                    'data' => [
+                        'login_id' => $student['std_no'],
+                        'name' => $student['std_name_c'],
+                        'gschool_name' => $student['gschool_name'],
+                        'gdept_name' => $student['gdept_name'],
+                        'type' => $type,
+                        'photo' => getStudentPhotoUrl($student['std_no']);
+                    ],
                 ];
             }
         } else {
@@ -47,7 +54,14 @@ class UserAuthServices
             if ($teacher['teacher_pwd'] == '0x' . md5($userPost['password'])) {
                 return [
                     'status' => 'success',
-                    'msg' => '',
+                    'data' => [
+                        'login_id' => $teacher['teacher_id'],
+                        'name' => $teacher['teacher_name'],
+                        'college_name' => $teacher['college_name'],
+                        'dept_name' => $teacher['dept_name'],
+                        'type' => $type,
+                        'photo' => getTeacherPhotoUrl($teacher['teacher_id']);
+                    ],
                 ];
             } else {
                 return [

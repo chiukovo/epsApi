@@ -25,9 +25,9 @@ if (! function_exists('getTeacherPhotoUrl')) {
      * 左上角 小圖用 (登入帳號的大頭貼路徑)
      * @return string
      */
-    function getTeacherPhotoUrl()
+    function getTeacherPhotoUrl($teacherId)
     {
-        $memberId = getUserId();
+        $memberId = $teacherId == '' ? getUserId() : $teacherId;
         $time = date('YmdHi');
         //1 = auth member id 功能好了要改掉
         $imgPath = asset(env('UPLOAD_FOLDER_NAME') . '/' . $memberId . '/photo.jpg') . '?v=' . $time;
