@@ -36,7 +36,7 @@ class UserAuthServices
                         'gschool_name' => $student['gschool_name'],
                         'gdept_name' => $student['gdept_name'],
                         'type' => $type,
-                        'photo' => getStudentPhotoUrl($student['std_no']);
+                        'photo' => getStudentPhotoUrl($student['std_no'])
                     ],
                 ];
             }
@@ -60,7 +60,7 @@ class UserAuthServices
                         'college_name' => $teacher['college_name'],
                         'dept_name' => $teacher['dept_name'],
                         'type' => $type,
-                        'photo' => getTeacherPhotoUrl($teacher['teacher_id']);
+                        'photo' => getTeacherPhotoUrl($teacher['teacher_id'])
                     ],
                 ];
             } else {
