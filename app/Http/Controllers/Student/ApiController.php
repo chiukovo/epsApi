@@ -139,12 +139,10 @@ class ApiController extends Controller
 
             return [
                 'status' => 'success',
-                'data' => [
-                    AlbumRepositories::getByFilters([
-                        'tbStu_Album.Folder_Name_Id' => $request['folderId'],
-                        'tbStu_Album.Stu_Id' => $userId,
-                    ])
-                ],
+                'data' => AlbumRepositories::getByFilters([
+                    'tbStu_Album.Folder_Name_Id' => $request['folderId'],
+                    'tbStu_Album.Stu_Id' => $userId,
+                ]),
             ];
         }
 
