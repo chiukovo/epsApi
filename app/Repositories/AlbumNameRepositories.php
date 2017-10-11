@@ -40,7 +40,7 @@ class AlbumNameRepositories
             $data = $data->toArray();
             //format
             foreach ($data as $key => $info) {
-                $info['img_use_photo'] = ( ! is_null($info['Album_Photo_Path'])) ? $imgPath : asset('image/not-use/noimage.jpg');
+                $info['img_use_photo'] = ( ! is_null($info['Album_Photo_Path'])) ? $info['Album_Photo_Path'] : asset('image/not-use/noimage.jpg');
 
                 $result[$info['Id']] = $info;
             }
