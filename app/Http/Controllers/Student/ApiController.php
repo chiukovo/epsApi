@@ -170,9 +170,7 @@ class ApiController extends Controller
 
             return [
                 'status' => 'success',
-                'data' => [
-                    GalleryServices::getPidGroup($gallery)
-                ]
+                'data' => GalleryServices::getPidGroup($gallery)
             ];
         }
 
@@ -219,9 +217,7 @@ class ApiController extends Controller
 
             return [
                 'status' => 'success',
-                'data' => [
-                    ShareRepositories::searchTitle($request['search'])
-                ]
+                'data' => ShareRepositories::searchTitle($request['search'])
             ];
         }
 
