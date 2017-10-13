@@ -226,4 +226,26 @@ class ApiController extends Controller
             'message' => 'key auth fail'
         ];
     }
+
+    /*
+     * my分享
+     */
+    public function myShare()
+    {
+        $request = Request::input();
+
+        if ( authApiField($request)) {
+            $userId = $request['id'];
+
+            return [
+                'status' => 'success',
+                'data' => ShareRepositories::getByFilters(['Stu_Id' => $userId]),
+            ];
+        }
+
+        return [
+            'status' => 'error',
+            'message' => 'key auth fail'
+        ];
+    }
 }

@@ -22,7 +22,8 @@ Route::group(['prefix' => 'api'], function () {
         Route::get('myGalleryDetail', 'Student\ApiController@myGalleryDetail');
         Route::get('myGallery', 'Student\ApiController@myGallery');
         Route::get('earlyWarning', 'Student\ApiController@earlyWarning');
-    	Route::get('shareSearch', 'Student\ApiController@shareSearch');
+        Route::get('shareSearch', 'Student\ApiController@shareSearch');
+        Route::get('myShare', 'Student\ApiController@myShare');
     });
     //teacher api
     Route::group(['prefix' => 'teacher'], function () {
