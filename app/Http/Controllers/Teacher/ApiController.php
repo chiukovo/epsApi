@@ -17,6 +17,30 @@ class ApiController extends Controller
 
         if ( authApiField($request) ) {
             $userId = $request['id'];
+            $sems = getNowSems();
+            $nowSems = $sems['year'] . $sems['sems'];
+
+            return [
+                'status' => 'success',
+                'data' => epsTeacherCourse($userId, $nowSems),
+            ];
+        }
+
+        return [
+            'status' => 'error',
+            'message' => 'key auth fail'
+        ];
+    }
+
+    /*
+     * studentSearch
+     */
+    public function studentSearch()
+    {
+        $request = Request::input();
+
+        if ( authApiField($request) ) {
+            $userId = $request['id'];
 
             return [
                 'status' => 'success',
