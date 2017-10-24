@@ -27,9 +27,9 @@ Route::group(['prefix' => 'api'], function () {
     });
     //teacher api
     Route::group(['prefix' => 'teacher'], function () {
-        //學期課程
+        //學期課程 + 學生查詢
         Route::get('semsClass', 'Teacher\ApiController@semsClass');
-        //學生查詢
-        Route::get('studentSearch', 'Teacher\ApiController@studentSearch');
+        //教學評鑑
+        Route::get('evaluation', 'Teacher\ApiController@evaluation');
     });
 });

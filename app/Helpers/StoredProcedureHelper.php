@@ -282,3 +282,28 @@ if (! function_exists('epsCourseSems')) {
         }
     }
 }
+
+if (! function_exists('epsRegicourse')) {
+    /**
+     * 修課學生
+     *
+     * @return array
+     */
+    function epsRegicourse($code)
+    {
+        $sems = getNowSems();
+
+        $db = DB::select(DB::raw("exec Academic.dbo.eps_regicourse :sems, :course_code"),[
+            ':sems' => $sems['year'] . $sems['sems'],
+            ':course_code' => $code,
+        ]);
+
+        $db = json_decode(json_encode($db), true);
+
+        if ( ! empty($db)) {
+            return $db;
+        } else {
+            return [];
+        }
+    }
+}

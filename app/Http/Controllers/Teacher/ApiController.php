@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
 use App\Repositories\TeacherIntroductionRepositories;
+use App\Repositories\EvaluationItemsMRepositories;
+use App\Repositories\EvaluationItemsD2Repositories;
+use App\Repositories\SpecialSetting1Repositories;
 use Request;
 
 class ApiController extends Controller
@@ -20,9 +23,15 @@ class ApiController extends Controller
             $sems = getNowSems();
             $nowSems = $sems['year'] . $sems['sems'];
 
+            $class = epsTeacherCourse($userId, $nowSems);
+
+            foreach ($class as $code => $info) {
+                $class[$code]['study_student'] = epsRegicourse($code);
+            }
+
             return [
                 'status' => 'success',
-                'data' => epsTeacherCourse($userId, $nowSems),
+                'data' => $class,
             ];
         }
 
@@ -33,18 +42,39 @@ class ApiController extends Controller
     }
 
     /*
-     * studentSearch
+     * evaluation
      */
-    public function studentSearch()
+    public function evaluation()
     {
         $request = Request::input();
 
         if ( authApiField($request) ) {
             $userId = $request['id'];
+            $sems = getNowSems();
+            $teacher = getTeacherData($userId, $sems['year'] . $sems['sems']);
+
+            //教師評鑑登打資料(字頭檔)
+            $evaluation_M = EvaluationItemsMRepositories::getByFilters([
+                'Te_id' => $teacher['teacher_id'],
+                'term' => $sems['year'],
+            ]);
+
+            if ( ! empty($evaluation_M) ) {
+                $D2 = EvaluationItemsD2Repositories::getByFilters([
+                    'M_Id' => $evaluation_M['Id'],
+                ]);
+
+                return [
+                    'status' => 'success',
+                    'data' => $D2,
+                ];
+            }
 
             return [
                 'status' => 'success',
+                'data' => [],
             ];
+            
         }
 
         return [
