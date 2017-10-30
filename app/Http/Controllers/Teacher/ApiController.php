@@ -74,7 +74,7 @@ class ApiController extends Controller
                 'status' => 'success',
                 'data' => [],
             ];
-            
+
         }
 
         return [

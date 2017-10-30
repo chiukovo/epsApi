@@ -301,6 +301,16 @@ if (! function_exists('epsRegicourse')) {
         $db = json_decode(json_encode($db), true);
 
         if ( ! empty($db)) {
+            foreach ($db as $key => $info) {
+                $studentInfo = getStudentData($info['std_no'], $sems['year'] . $sems['sems']);
+                if ( ! empty($studentInfo) ) {
+                    $db[$key]['std_name_c'] = $studentInfo['std_name_c'];
+                    $db[$key]['dept_name'] = $studentInfo['dept_name'];
+                    $db[$key]['gschool_name'] = $studentInfo['gschool_name'];
+                    $db[$key]['gdept_name'] = $studentInfo['gdept_name'];
+                }
+            }
+
             return $db;
         } else {
             return [];
