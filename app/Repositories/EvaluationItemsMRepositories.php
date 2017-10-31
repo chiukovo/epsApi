@@ -39,7 +39,7 @@ class EvaluationItemsMRepositories
                 'Te_id' => $loginInfo['login_id'],
                 'teacher_name' => $loginInfo['name'],
                 'teacher_code' => $loginInfo['teacher_code'],
-                'teacher_code' => $loginInfo['teacher_code'],
+                'Date' => date('Y-m-d'),
                 'teacher_title' => $loginInfo['teacher_title'],
                 'term' => $nowYear['year'],
             ]);

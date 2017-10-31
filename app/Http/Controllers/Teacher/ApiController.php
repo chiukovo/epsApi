@@ -20,7 +20,7 @@ class ApiController extends Controller
 
         if ( authApiField($request) ) {
             $userId = $request['id'];
-            $sems = getNowSems();
+            $sems = getNowSems('course_sems');
             $nowSems = $sems['year'] . $sems['sems'];
 
             $class = epsTeacherCourse($userId, $nowSems);

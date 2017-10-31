@@ -146,9 +146,9 @@ if ( ! function_exists('getNowSems')) {
      *
      * @return array
      */
-    function getNowSems()
+    function getNowSems($target = 'std_card_sems')
     {
-        $year = getYearSems()['course_map_year'];
+        $year = session('loginInfo')[$target];
 
         return [
             'year' => substr($year, 0, -1),
@@ -291,7 +291,7 @@ if (! function_exists('epsRegicourse')) {
      */
     function epsRegicourse($code)
     {
-        $sems = getNowSems();
+        $sems = getNowSems('course_sems');
 
         $db = DB::select(DB::raw("exec Academic.dbo.eps_regicourse :sems, :course_code"),[
             ':sems' => $sems['year'] . $sems['sems'],
