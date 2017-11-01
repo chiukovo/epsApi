@@ -186,7 +186,7 @@ if (! function_exists('epsTeacherCourse')) {
     {
         $db = DB::select(DB::raw("exec Academic.dbo.eps_teacher_course :sems, :teacher_code"),[
             ':sems' => $sems,
-            ':teacher_code' => $teacher_id,
+            ':teacher_id' => $teacher_id,
         ]);
 
         $db = json_decode(json_encode($db), true);
