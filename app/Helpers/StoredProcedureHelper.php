@@ -184,7 +184,7 @@ if (! function_exists('epsTeacherCourse')) {
      */
     function epsTeacherCourse($teacher_id, $sems)
     {
-        $db = DB::select(DB::raw("exec Academic.dbo.eps_teacher_course :sems, :teacher_code"),[
+        $db = DB::select(DB::raw("exec Academic.dbo.eps_teacher_course :sems, :teacher_id"),[
             ':sems' => $sems,
             ':teacher_id' => $teacher_id,
         ]);
