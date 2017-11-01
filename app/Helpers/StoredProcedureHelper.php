@@ -148,7 +148,7 @@ if ( ! function_exists('getNowSems')) {
      */
     function getNowSems($target = 'std_card_sems')
     {
-        $year = session('loginInfo')[$target];
+        $year = getYearSems()[$target];
 
         return [
             'year' => substr($year, 0, -1),
