@@ -14,7 +14,7 @@ class IntroductionRepositories
      */
     public static function getByFilters($filters)
     {
-        $user = Introduction::where($filters)->first(['Introduction']);
+        $user = Introduction::where($filters)->first();
 
         if ( ! is_null($user)) {
             return $user->toArray();

@@ -7,36 +7,27 @@ use Auth;
 
 class TeacherTeachstuRepositories
 {
-    /**
-     * get getTerm by filters
-     *
-     * @param array
-     */
-    public static function getTerm($filters)
+    public static function getConnectWhereIn($number)
     {
-        $term = array();
-
-        $data = Te_teachstu::orderBy('Id', 'desc')->where($filters)->get();
+        $data = Te_teachstu::orderBy('Id', 'desc')
+            ->whereIn('Number3', $number)
+            ->get(['Number1', 'Number2', 'Number3', 'Results_paper as title', 'Id']);
 
         if ( ! is_null($data)) {
             $result = $data->toArray();
 
-            foreach ($result as $key => $info) {
-                if(!in_array($info['Results_term'], $term)){
-                    array_push($term, $info['Results_term']);
-                }
-            }
-            sort($term);
-            return $term;
+            return $result;
         }
+
+        return [];
     }
-    
+
     /**
      * get by filters
      *
      * @param array
      */
-    public static function getInfoByFilters($filters)
+    public static function getByFilters($filters)
     {
         $data = Te_teachstu::orderBy('Id', 'desc')->where($filters)->get();
 
@@ -47,7 +38,7 @@ class TeacherTeachstuRepositories
                 $result[$key]['edit'] = false;
             }
 
-            return $result;
+            return formatListEvalName($result);
         }
     }
 
@@ -77,6 +68,11 @@ class TeacherTeachstuRepositories
         return ['status' => 'success'];
     }
 
+    public static function createReturnId($insertData)
+    {
+        return Te_teachstu::create($insertData)->id;
+    }
+    
     public static function delete($id)
     {
         try {

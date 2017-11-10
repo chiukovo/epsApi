@@ -47,6 +47,39 @@ class GadreRepositories
         }
     }
 
+    public static function getShareByFilters($filters, $search)
+    {
+        $data = Gadre::orderBy('Cadre_term', 'desc')
+            ->orderBy('Cadre_term_type', 'desc')
+            ->orderBy('Id', 'desc')
+            ->where('Cadre_Deeds', '!=', '');
+
+        if ( $search != '' ) {
+            $data->where('Cadre_Deeds', 'like', '%' . $search . '%' );
+        } else {
+            $data->where($filters);
+        }
+
+        $data = $data->get([
+            'Cadre_name as title',
+            'Cadre_term as term',
+            'Cadre_term_type as term_type',
+            'Cadre_Deeds as Deeds',
+            'Cadre_photo',
+        ]);
+
+        if ( ! is_null($data)) {
+            $result = $data->toArray();
+
+            foreach ($result as $key => $info) {
+                $result[$key]['info'] = false;
+                $result[$key]['photo_decode'] = json_decode($result[$key]['Cadre_photo']);
+            }
+
+            return $result;
+        }
+    }
+
     public static function updateById($updateData, $id)
     {
         try {

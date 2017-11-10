@@ -2,10 +2,10 @@
 
 namespace App\Repositories;
 
-use App\Models\EvaluationItemsD2;
+use App\Models\SpecialSetting3;
 use Auth;
 
-class EvaluationItemsD2Repositories
+class SpecialSetting3Repositories
 {
     /**
      * get by filters
@@ -14,7 +14,7 @@ class EvaluationItemsD2Repositories
      */
     public static function create($insertData)
     {
-        EvaluationItemsD2::create($insertData);
+        SpecialSetting3::create($insertData);
 
         return ['status' => 'success'];
     }
@@ -26,27 +26,19 @@ class EvaluationItemsD2Repositories
      */
     public static function getByFilters($filters)
     {
-        $data = EvaluationItemsD2::where($filters)->get()->toArray();
+        $data = SpecialSetting3::where($filters)->get();
 
-        if ( ! empty($data)) {
-            return $data;
-        } else {
-            $create = [
-                'M_id' => $filters['M_id'],
-                'Class' => $filters['Class'],
-                'Name' => $filters['Name'],
-            ];
-
-            EvaluationItemsD2::create($create);
+        if ( ! is_null($data)) {
+            return $data->toArray();
         }
 
         return [];
     }
 
-    public static function updateByFilters($updateData, $filters)
+    public static function updateById($updateData, $id)
     {
         try {
-            EvaluationItemsD2::where($filters)->update($updateData);
+            SpecialSetting3::where('Id', $id)->update($updateData);
 
             return ['status' => 'success'];
         } catch (Exception $e) {

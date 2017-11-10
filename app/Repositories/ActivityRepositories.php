@@ -47,6 +47,39 @@ class ActivityRepositories
         }
     }
 
+    public static function getShareByFilters($filters, $search)
+    {
+        $data = Activity::orderBy('Activ_term', 'desc')
+            ->orderBy('Activ_term_type', 'desc')
+            ->orderBy('Id', 'desc')
+            ->where('Deeds', '!=', '');
+
+        if ( $search != '' ) {
+            $data->where('Deeds', 'like', '%' . $search . '%' );
+        } else {
+            $data->where($filters);
+        }
+
+        $data = $data->get([
+            'Activ_name as title',
+            'Activ_term as term',
+            'Activ_term_type as term_type',
+            'Activ_photo',
+            'Deeds',
+        ]);
+
+        if ( ! is_null($data)) {
+            $result = $data->toArray();
+
+            foreach ($result as $key => $info) {
+                $result[$key]['info'] = false;
+                $result[$key]['photo_decode'] = json_decode($result[$key]['Activ_photo']);
+            }
+
+            return $result;
+        }
+    }
+
     public static function updateById($updateData, $id)
     {
         try {

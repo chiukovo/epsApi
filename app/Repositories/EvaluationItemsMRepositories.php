@@ -41,13 +41,36 @@ class EvaluationItemsMRepositories
                 'teacher_code' => $loginInfo['teacher_code'],
                 'Date' => date('Y-m-d'),
                 'teacher_title' => $loginInfo['teacher_title'],
+                'college_name' => $loginInfo['college_name'],
+                'dept_name' => $loginInfo['dept_name'],
                 'term' => $nowYear['year'],
+                'Self_check' => 0,
+                'First_check' => 0,
+                'Reviewer_check' => 0,
+                'Decide_check' => 0,
+                'loginInfo' => $loginInfo['depart_id'],
             ]);
 
             $user = EvaluationItemsM::where($filters)->first();
 
             return $user->toArray();
         }
+    }
+
+    /**
+     * get by filters
+     *
+     * @param array
+     */
+    public static function checkByFilters($filters)
+    {
+        $data = EvaluationItemsM::where($filters)->first();
+
+        if ( ! is_null($data)) {
+            return $data->toArray();
+        }
+
+        return [];
     }
 
     public static function updateById($updateData, $id)

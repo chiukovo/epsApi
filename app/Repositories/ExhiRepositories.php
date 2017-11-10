@@ -45,6 +45,37 @@ class ExhiRepositories
         }
     }
 
+    public static function getShareByFilters($filters, $search)
+    {
+        $data = Exhi::orderBy('Id', 'desc')
+            ->where('Exhi_exp', '!=', '');
+
+        if ( $search != '' ) {
+            $data->where('Exhi_unit', 'like', '%' . $search . '%' );
+        } else {
+            $data->where($filters);
+        }
+
+        $data = $data->get([
+            'Exhi_unit as title',
+            'Exhi_exp as Deeds',
+            'Exhi_photo',
+        ]);
+
+        if ( ! is_null($data)) {
+            $result = $data->toArray();
+
+            foreach ($result as $key => $info) {
+                $result[$key]['info'] = false;
+                $result[$key]['term'] = '';
+                $result[$key]['term_type'] = '';
+                $result[$key]['photo_decode'] = json_decode($result[$key]['Exhi_photo']);
+            }
+
+            return $result;
+        }
+    }
+
     public static function updateById($updateData, $id)
     {
         try {

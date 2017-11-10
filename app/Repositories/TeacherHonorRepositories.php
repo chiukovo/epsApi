@@ -7,6 +7,21 @@ use Auth;
 
 class TeacherHonorRepositories
 {
+    public static function getConnectWhereIn($number)
+    {
+        $data = Te_Honor::orderBy('Id', 'desc')
+            ->whereIn('Number3', $number)
+            ->get(['Number3', 'Honor_name as title', 'Id']);
+
+        if ( ! is_null($data)) {
+            $result = $data->toArray();
+
+            return $result;
+        }
+
+        return [];
+    }
+
     /**
      * get by filters
      *
@@ -23,7 +38,7 @@ class TeacherHonorRepositories
                 $result[$key]['edit'] = false;
             }
 
-            return $result;
+            return formatListEvalName($result);
         }
     }
 
@@ -41,16 +56,16 @@ class TeacherHonorRepositories
         }
     }
 
-    /**
-     * get by filters
-     *
-     * @param array
-     */
     public static function create($insertData)
     {
         Te_Honor::create($insertData);
 
         return ['status' => 'success'];
+    }
+    
+    public static function createReturnId($insertData)
+    {
+        return Te_Honor::create($insertData)->id;
     }
 
     public static function delete($id)

@@ -43,6 +43,37 @@ class LiceRepositories
         }
     }
 
+    public static function getShareByFilters($filters, $search)
+    {
+        $data = Lice::orderBy('Lice_date', 'desc')
+            ->orderBy('Id', 'desc')
+            ->where('Lice_exp', '!=', '');
+
+        if ( $search != '' ) {
+            $data->where('Lice_exp', 'like', '%' . $search . '%' );
+        } else {
+            $data->where($filters);
+        }
+
+        $data = $data->get([
+            'Lice_name as title',
+            'Lice_exp as Deeds',
+        ]);
+
+        if ( ! is_null($data)) {
+            $result = $data->toArray();
+
+            foreach ($result as $key => $info) {
+                $result[$key]['info'] = false;
+                $result[$key]['term'] = '';
+                $result[$key]['term_type'] = '';
+                $result[$key]['photo_decode'] = '{"img_1":"","img_2":"","img_3":""}';
+            }
+
+            return $result;
+        }
+    }
+
     public static function updateById($updateData, $id)
     {
         try {

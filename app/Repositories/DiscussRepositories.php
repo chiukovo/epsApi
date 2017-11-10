@@ -2,24 +2,21 @@
 
 namespace App\Repositories;
 
-use App\Models\Te_Education;
+use App\Models\Discuss;
 use Auth;
 
-class TeacherEducationRepositories
+class DiscussRepositories
 {
-    public static function getConnectWhereIn($number)
+    /**
+     * get by filters
+     *
+     * @param array
+     */
+    public static function create($insertData)
     {
-        $data = Te_Education::orderBy('Id', 'desc')
-            ->whereIn('Number3', $number)
-            ->get(['Number3', 'Sch_name as title', 'Id']);
+        Discuss::create($insertData);
 
-        if ( ! is_null($data)) {
-            $result = $data->toArray();
-
-            return $result;
-        }
-
-        return [];
+        return ['status' => 'success'];
     }
 
     /**
@@ -29,16 +26,25 @@ class TeacherEducationRepositories
      */
     public static function getByFilters($filters)
     {
-        $data = Te_Education::orderBy('Education_type', 'desc')->where($filters)->get();
+        $data = Discuss::orderBy('Id', 'asc')
+            ->where($filters)
+            ->get();
 
         if ( ! is_null($data)) {
             $result = $data->toArray();
 
             foreach ($result as $key => $info) {
+                $result[$key]['photo_path'] = getStudentPhotoUrl($info['std_no']);
+
+                if ( ! is_null($info['teacher_id']) ) {
+                    $result[$key]['teacher_photo_path'] = getTeacherPhotoUrl($info['teacher_id']);
+                }
+
                 $result[$key]['edit'] = false;
+                $result[$key]['info'] = true;
             }
 
-            return formatListEvalName($result);
+            return $result;
         }
 
         return [];
@@ -47,7 +53,7 @@ class TeacherEducationRepositories
     public static function updateById($updateData, $id)
     {
         try {
-            Te_Education::where('id', $id)->update($updateData);
+            Discuss::where('Id', $id)->update($updateData);
 
             return ['status' => 'success'];
         } catch (Exception $e) {
@@ -58,22 +64,10 @@ class TeacherEducationRepositories
         }
     }
 
-    public static function create($insertData)
-    {
-        Te_Education::create($insertData);
-
-        return ['status' => 'success'];
-    }
-
-    public static function createReturnId($insertData)
-    {
-        return Te_Education::create($insertData)->id;
-    }
-
     public static function delete($id)
     {
         try {
-            Te_Education::where('Id', $id)->delete();
+            Discuss::where('Id', $id)->delete();
 
             return ['status' => 'success'];
         } catch (Exception $e) {

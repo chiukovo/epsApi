@@ -14,7 +14,7 @@ class ProfileWebRepositories
      */
     public static function getByFilters($filters)
     {
-        $data = ProfileWeb::where($filters)->first(['Remark', 'URL']);
+        $data = ProfileWeb::where($filters)->first();
 
         if ( ! is_null($data)) {
             return $data->toArray();

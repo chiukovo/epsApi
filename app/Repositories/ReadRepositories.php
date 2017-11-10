@@ -47,6 +47,38 @@ class ReadRepositories
         }
     }
 
+    public static function getShareByFilters($filters, $search)
+    {
+        $data = Read::orderBy('Read_term', 'desc')
+            ->orderBy('Read_term_type', 'desc')
+            ->orderBy('Id', 'desc')
+            ->where('Read_exp', '!=', '');
+
+        if ( $search != '' ) {
+            $data->where('Read_work', 'like', '%' . $search . '%' );
+        } else {
+            $data->where($filters);
+        }
+
+        $data = $data->get([
+            'Read_work as title',
+            'Read_term as term',
+            'Read_term_type as term_type',
+            'Read_exp as Deeds',
+        ]);
+
+        if ( ! is_null($data)) {
+            $result = $data->toArray();
+
+            foreach ($result as $key => $info) {
+                $result[$key]['info'] = false;
+                $result[$key]['photo_decode'] = '{"img_1":"","img_2":"","img_3":""}';
+            }
+
+            return $result;
+        }
+    }
+
     public static function updateById($updateData, $id)
     {
         try {

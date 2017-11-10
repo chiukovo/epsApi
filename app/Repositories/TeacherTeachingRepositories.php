@@ -8,35 +8,11 @@ use Auth;
 class TeacherTeachingRepositories
 {
     /**
-     * get getTerm by filters
-     *
-     * @param array
-     */
-    public static function getTerm($filters)
-    {
-        $term = array();
-
-        $data = Te_teaching::orderBy('Id', 'desc')->where($filters)->get();
-
-        if ( ! is_null($data)) {
-            $result = $data->toArray();
-
-            foreach ($result as $key => $info) {
-                if(!in_array($info['Results_term'], $term)){
-                    array_push($term, $info['Results_term']);
-                }
-            }
-            sort($term);
-            return $term;
-        }
-    }
-
-    /**
      * get by filters
      *
      * @param array
      */
-    public static function getInfoByFilters($filters)
+    public static function getByFilters($filters)
     {
         $data = Te_teaching::orderBy('Id', 'desc')->where($filters)->get();
 
@@ -49,7 +25,7 @@ class TeacherTeachingRepositories
 
             return $result;
         }
-        
+
     }
 
     public static function updateById($updateData, $id)

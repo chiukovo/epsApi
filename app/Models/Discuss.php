@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Introduction extends Model
+class Discuss extends Model
 {
     //config guards name
-    protected $table = 'tbStu_Introduction';
+    protected $table = 'tbTe_discuss';
 
     public $timestamps = false;
 

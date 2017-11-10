@@ -40,7 +40,9 @@ class AlbumNameRepositories
             $data = $data->toArray();
             //format
             foreach ($data as $key => $info) {
-                $info['img_use_photo'] = ( ! is_null($info['Album_Photo_Path'])) ? $info['Album_Photo_Path'] : 'image/not-use/noimage.jpg';
+                $filePath = public_path($info['Album_Photo_Path']);
+                $imgPath = url('/') . '/' . $info['Album_Photo_Path'];
+                $info['img_use_photo'] = (is_file($filePath)) ? $imgPath : asset('image/not-use/noimage.jpg');
 
                 $result[$info['Id']] = $info;
             }

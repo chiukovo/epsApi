@@ -47,6 +47,39 @@ class RaceRepositories
         }
     }
 
+    public static function getShareByFilters($filters, $search)
+    {
+        $data = Race::orderBy('Race_term', 'desc')
+            ->orderBy('Race_term_type', 'desc')
+            ->orderBy('Id', 'desc')
+            ->where('Race_exp', '!=', '');
+
+        if ( $search != '' ) {
+            $data->where('Race_name', 'like', '%' . $search . '%' );
+        } else {
+            $data->where($filters);
+        }
+
+        $data = $data->get([
+            'Race_name as title',
+            'Race_term as term',
+            'Race_term_type as term_type',
+            'Race_exp as Deeds',
+            'Race_photo',
+        ]);
+
+        if ( ! is_null($data)) {
+            $result = $data->toArray();
+
+            foreach ($result as $key => $info) {
+                $result[$key]['info'] = false;
+                $result[$key]['photo_decode'] = json_decode($result[$key]['Race_photo']);
+            }
+
+            return $result;
+        }
+    }
+
     public static function updateById($updateData, $id)
     {
         try {

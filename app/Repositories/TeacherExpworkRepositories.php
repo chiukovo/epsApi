@@ -7,6 +7,21 @@ use Auth;
 
 class TeacherExpworkRepositories
 {
+    public static function getConnectWhereIn($number)
+    {
+        $data = Te_Expwork::orderBy('Id', 'desc')
+            ->whereIn('Number3', $number)
+            ->get(['Number3', 'Work_name as title', 'Id']);
+
+        if ( ! is_null($data)) {
+            $result = $data->toArray();
+
+            return $result;
+        }
+
+        return [];
+    }
+
     /**
      * get by filters
      *
@@ -24,7 +39,7 @@ class TeacherExpworkRepositories
                 $result[$key]['info'] = false;
             }
 
-            return $result;
+            return formatListEvalName($result);
         }
     }
 
@@ -42,16 +57,16 @@ class TeacherExpworkRepositories
         }
     }
 
-    /**
-     * get by filters
-     *
-     * @param array
-     */
     public static function create($insertData)
     {
         Te_Expwork::create($insertData);
 
         return ['status' => 'success'];
+    }
+
+    public static function createReturnId($insertData)
+    {
+        return Te_Expwork::create($insertData)->id;
     }
 
     public static function delete($id)

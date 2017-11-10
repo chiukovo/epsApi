@@ -19,6 +19,7 @@ use App\Repositories\AlbumRepositories;
 use App\Repositories\AlbumNameRepositories;
 use App\Repositories\ShareRepositories;
 use App\Services\GalleryServices;
+use App\Services\ShareServices;
 use Request;
 
 class ApiController extends Controller
@@ -63,8 +64,10 @@ class ApiController extends Controller
                 'status' => 'success',
                 'data' => [
                     'lice' => LiceRepositories::getByFilters(['Stu_Id' => $userId]),
+                    'parcSchool' => epsStudentIntern($userId),
                     'parc' => ParcRepositories::getByFilters(['Stu_Id' => $userId]),
                     'read' => ReadRepositories::getByFilters(['Stu_Id' => $userId]),
+                    'readSchool' => epsStudentWork($userId),
                 ]
             ];
         }
@@ -90,7 +93,7 @@ class ApiController extends Controller
                 'data' => [
                     'Schship' => SchshipRepositories::getByFilters(['Stu_Id' => $userId]),
                     'Race' => RaceRepositories::getByFilters(['Stu_Id' => $userId]),
-                    'RandP' => RandPRepositories::getByFilters(['Stu_Id' => $userId]),
+                    'RandP' => epsStdHonor($userId),
                 ]
             ];
         }
@@ -193,7 +196,7 @@ class ApiController extends Controller
             return [
                 'status' => 'success',
                 'data' => [
-                    'scoreNotPass' => uspScoreSemsNotpass(),
+                    'scoreNotPass' => uspScoreSemsNotpass(getUserId()),
                     'record' => epsTeacherConsult(getUserId()),
                 ]
             ];
@@ -214,10 +217,11 @@ class ApiController extends Controller
 
         if ( authApiField($request) && isset($request['search']) ) {
             $userId = $request['id'];
+            $searchType = isset($request['searchType']) ? $request['searchType'] : 1;
 
             return [
                 'status' => 'success',
-                'data' => ShareRepositories::searchTitle($request['search'])
+                'data' => ShareServices::getShareData($searchType, $userId, $request['search']),
             ];
         }
 
@@ -236,10 +240,11 @@ class ApiController extends Controller
 
         if ( authApiField($request)) {
             $userId = $request['id'];
+            $selfType = isset($request['selfType']) ? $request['selfType'] : 1;
 
             return [
                 'status' => 'success',
-                'data' => ShareRepositories::getByFilters(['Stu_Id' => $userId]),
+                'data' => ShareServices::getShareData($selfType, $userId),
             ];
         }
 

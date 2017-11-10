@@ -14,65 +14,39 @@ class TeacherIntroductionRepositories
      */
     public static function getByFilters($filters)
     {
-        $data = Te_Introduction::where($filters)->get();
+        $data = Te_Introduction::where($filters)->first();
+        $userInfo = getLoginInfo();
 
         if ( ! is_null($data)) {
-
+            return $data->toArray();
         } else {
+            $nowYear = getNowSems();
+
             //沒有就新增一筆空值
             Te_Introduction::create([
-                'Stu_Id' => getUserId()
+                'Te_Id' => getUserId(),
+                'teacher_code' => $userInfo['teacher_code'],
+                'teacher_name' => $userInfo['name'],
+                'dept_name' => $userInfo['dept_name'],
+                'term' => $nowYear['year'] . $nowYear['sems'],
             ]);
 
             $data = Te_Introduction::where($filters)->first(['Introduction']);
+
+            return $data->toArray();
         }
-
-        $result = $data->toArray();
-
-        foreach ($result as $key => $info) {
-            $result[$key]['edit'] = false;
-            $result[$key]['info'] = true;
-        }
-
-        return $result;
     }
 
-    public static function updateById($updateData, $id)
+    public static function updateByTeId($updateData, $id)
     {
         try {
-            Te_Introduction::where('id', $id)->update($updateData);
+            Te_Introduction::where('Te_Id', $id)->update($updateData);
 
             return ['status' => 'success'];
         } catch (Exception $e) {
             return [
                 'status' => 'error',
                 'msg' => '發生錯誤 新增或修改失敗'
-            ];
-        }
-    }
-
-    /**
-     * get by filters
-     *
-     * @param array
-     */
-    public static function create($insertData)
-    {
-        Te_Introduction::create($insertData);
-
-        return ['status' => 'success'];
-    }
-
-    public static function delete($id)
-    {
-        try {
-            Te_Introduction::where('Id', $id)->delete();
-
-            return ['status' => 'success'];
-        } catch (Exception $e) {
-            return [
-                'status' => 'error',
-                'msg' => '發生錯誤 刪除失敗'
             ];
         }
     }

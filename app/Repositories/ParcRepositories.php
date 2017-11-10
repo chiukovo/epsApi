@@ -47,6 +47,42 @@ class ParcRepositories
         }
     }
 
+    public static function getShareByFilters($filters, $search)
+    {
+        $data = Parc::orderBy('parc_term', 'desc')
+            ->orderBy('parc_term_type', 'desc')
+            ->orderBy('Id', 'desc');
+
+        if ( $search != '' ) {
+            $data->where('parc_exp', 'like', '%' . $search . '%' );
+        } else {
+            $data->where($filters);
+        }
+
+        $data = $data->get([
+            'parc_work as title',
+            'parc_term as term',
+            'parc_term_type as term_type',
+            'parc_exp as Deeds',
+            'parc_photo',
+        ]);
+
+        if ( ! is_null($data)) {
+            $result = $data->toArray();
+
+            foreach ($result as $key => $info) {
+                $result[$key]['info'] = false;
+                $result[$key]['photo_decode'] = json_decode($result[$key]['parc_photo']);
+
+                if ( $info['Deeds'] == '' ) {
+                    unset($result[$key]);
+                }
+            }
+
+            return $result;
+        }
+    }
+
     public static function updateById($updateData, $id)
     {
         try {

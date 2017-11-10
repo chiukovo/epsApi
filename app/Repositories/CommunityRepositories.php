@@ -46,6 +46,38 @@ class CommunityRepositories
             return $result;
         }
     }
+    public static function getShareByFilters($filters, $search)
+    {
+        $data = Community::orderBy('League_term', 'desc')
+            ->orderBy('League_term_type', 'desc')
+            ->orderBy('Id', 'desc')
+            ->where('League_Deeds', '!=', '');
+
+        if ( $search != '' ) {
+            $data->where('League_Deeds', 'like', '%' . $search . '%' );
+        } else {
+            $data->where($filters);
+        }
+
+        $data = $data->get([
+            'League_name as title',
+            'League_term as term',
+            'League_term_type as term_type',
+            'League_Deeds as Deeds',
+            'League_photo',
+        ]);
+
+        if ( ! is_null($data)) {
+            $result = $data->toArray();
+
+            foreach ($result as $key => $info) {
+                $result[$key]['info'] = false;
+                $result[$key]['photo_decode'] = json_decode($result[$key]['League_photo']);
+            }
+
+            return $result;
+        }
+    }
 
     public static function updateById($updateData, $id)
     {

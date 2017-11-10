@@ -2,9 +2,9 @@
 
 namespace App\Repositories;
 
-use App\Models\Te_Talks;
+use App\Models\ResearchField;
 
-class TeacherTalksRepositories
+class ResearchFieldRepositories
 {
     /**
      * get by filters
@@ -13,17 +13,18 @@ class TeacherTalksRepositories
      */
     public static function getByFilters($filters)
     {
-        $data = Te_Talks::orderBy('Id', 'desc')->where($filters)->get();
+        $data = ResearchField::orderBy('sort', 'asc')->where($filters)->get();
 
         if ( ! is_null($data)) {
             $result = $data->toArray();
 
-            foreach ($result as $key => $info) {
-                $result[$key]['edit'] = false;
+            foreach ($result as $key => $value) {
+                $result[$key]['insertData'] = '';
             }
 
             return $result;
         }
 
+        return [];
     }
 }

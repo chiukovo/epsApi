@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Introduction extends Model
+class ResearchField extends Model
 {
     //config guards name
-    protected $table = 'tbStu_Introduction';
+    protected $table = 'Te_Result_Item';
 
     public $timestamps = false;
 

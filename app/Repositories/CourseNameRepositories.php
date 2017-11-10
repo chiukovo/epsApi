@@ -2,10 +2,9 @@
 
 namespace App\Repositories;
 
-use App\Models\Schship;
-use Auth;
+use App\Models\CourseName;
 
-class SchshipRepositories
+class CourseNameRepositories
 {
     /**
      * get by filters
@@ -14,7 +13,7 @@ class SchshipRepositories
      */
     public static function create($insertData)
     {
-        Schship::create($insertData);
+        CourseName::create($insertData);
 
         return ['status' => 'success'];
     }
@@ -26,9 +25,10 @@ class SchshipRepositories
      */
     public static function getByFilters($filters)
     {
-        $data = Schship::orderBy('Schship_term', 'desc')
-            ->orderBy('Schship_term_type', 'desc')
+        $data = CourseName::orderBy('term', 'desc')
+            ->orderBy('term_type', 'desc')
             ->orderBy('Id', 'desc')
+            ->orderBy('course_code', 'desc')
             ->where($filters)
             ->get();
 
@@ -37,49 +37,36 @@ class SchshipRepositories
 
             foreach ($result as $key => $info) {
                 $result[$key]['edit'] = false;
-                $result[$key]['info'] = false;
             }
 
             return $result;
         }
     }
 
-    public static function getShareByFilters($filters, $search)
+    /**
+     * get in course code
+     *
+     * @param array
+     */
+    public static function getInCourseCode($courseCode)
     {
-        $data = Schship::orderBy('Schship_term', 'desc')
-            ->orderBy('Schship_term_type', 'desc')
+        $data = CourseName::orderBy('term', 'desc')
+            ->orderBy('term_type', 'desc')
             ->orderBy('Id', 'desc')
-            ->where('Schship_exp', '!=', '');
-
-        if ( $search != '' ) {
-            $data->where('Schship_name', 'like', '%' . $search . '%' );
-        } else {
-            $data->where($filters);
-        }
-
-        $data = $data->get([
-            'Schship_name as title',
-            'Schship_term as term',
-            'Schship_term_type as term_type',
-            'Schship_exp as Deeds',
-        ]);
+            ->whereIn('course_code', $courseCode)
+            ->get();
 
         if ( ! is_null($data)) {
-            $result = $data->toArray();
-
-            foreach ($result as $key => $info) {
-                $result[$key]['info'] = false;
-                $result[$key]['photo_decode'] = '{"img_1":"","img_2":"","img_3":""}';
-            }
-
-            return $result;
+            return $data->toArray();
         }
+
+        return [];
     }
 
     public static function updateById($updateData, $id)
     {
         try {
-            Schship::where('Id', $id)->update($updateData);
+            CourseName::where('Id', $id)->update($updateData);
 
             return ['status' => 'success'];
         } catch (Exception $e) {
@@ -93,7 +80,7 @@ class SchshipRepositories
     public static function delete($id)
     {
         try {
-            Schship::where('Id', $id)->delete();
+            CourseName::where('Id', $id)->delete();
 
             return ['status' => 'success'];
         } catch (Exception $e) {
