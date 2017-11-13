@@ -29,6 +29,8 @@ class ApiController extends Controller
                 $class[$code]['study_student'] = epsRegicourse($nowSems, $code);
             }
 
+            $class = array_values($class);
+
             return [
                 'status' => 'success',
                 'data' => $class,
