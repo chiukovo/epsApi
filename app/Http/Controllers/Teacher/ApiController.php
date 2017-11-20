@@ -27,7 +27,18 @@ class ApiController extends Controller
             $class = epsTeacherCourse($userId, $nowSems);
 
             foreach ($class as $code => $info) {
-                $class[$code]['study_student'] = epsRegicourse($nowSems, $code);
+                $students = epsRegicourse($nowSems, $code);
+
+                foreach ($students as $key => $student) {
+                    $std_no = $student['std_no'];
+                    $studnetInfo = getStudentData($std_no, $nowSems);
+
+                    if ( ! empty($studnetInfo) ) {
+                        $students[$key]['std_name_c'] = $studnetInfo['std_name_c'];
+                    }
+                }
+
+                $class[$code]['study_student'] = $students;
             }
 
             $class = array_values($class);
