@@ -24,7 +24,17 @@ class ApiController extends Controller
             $getSems = isset($request['sems']) ? $request['sems'] : $sems['year'] . $sems['sems'];
             $nowSems = $getSems;
 
-            $class = epsTeacherCourse($userId, $nowSems);
+            //teacher wip
+            $teacher = getTeacherData($userId, $getSems);
+
+            if ( empty($teacher)) {
+                return [
+                    'status' => 'error',
+                    'message' => 'no data'
+                ];
+            }
+
+            $class = epsTeacherCourse($teacher['teacher_id'], $userId, $nowSems);
 
             foreach ($class as $code => $info) {
                 $students = epsRegicourse($nowSems, $code);

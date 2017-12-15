@@ -180,6 +180,11 @@ if ( ! function_exists('epsTeacherConsult')) {
         $db = json_decode(json_encode($db), true);
 
         if ( ! empty($db)) {
+            foreach ($db as $key => $info) {
+                $db[$key]['consult_date'] = html_entity_decode($info['consult_date']);
+                $db[$key]['consult_type'] = html_entity_decode($info['consult_type']);
+            }
+
             return $db;
         } else {
             return [];
@@ -254,10 +259,11 @@ if (! function_exists('epsTeacherCourse')) {
     /**
      * @return array
      */
-    function epsTeacherCourse($teacher_id, $sems)
+    function epsTeacherCourse($teacher_id, $teacher_code, $sems)
     {
-        $db = DB::select(DB::raw("exec Academic.dbo.eps_teacher_course :sems, :teacher_id"), [
+        $db = DB::select(DB::raw("exec Academic.dbo.eps_teacher_course :sems, :teacher_code, :teacher_id"), [
             ':sems' => $sems,
+            ':teacher_code' => $teacher_code,
             ':teacher_id' => $teacher_id,
         ]);
 
@@ -342,9 +348,13 @@ if (! function_exists('spStdAbsence')) {
             ':std_no' => $std_no,
         ]);
 
+        $getField = false;
+        $field = [];
         foreach ($db as $key => $info) {
             $format = [];
             $info = (array) $info;
+            unset($info['sems']);
+            unset($info['std_no']);
 
             foreach ($info as $dtKey => $dtInfo) {
                 $dtKey = mb_convert_encoding($dtKey, "UTF-8", "BIG5");
@@ -352,16 +362,24 @@ if (! function_exists('spStdAbsence')) {
                 if ( $dtKey == '總缺課(含不列計缺課)' ) {
                     $dtKey = '總缺課';
                 }
-                $format[$dtKey] = $dtInfo;
+                $format[] = $dtInfo;
+
+                if ( ! $getField ) {
+                    $field[] = $dtKey;
+                }
             }
 
+            $getField = true;
             $db[$key] = $format;
         }
 
         ini_set('default_charset', 'UTF-8');
 
         if ( ! empty($db)) {
-            return $db;
+            return [
+                'data' => $db,
+                'field' => $field
+            ];
         } else {
             return [];
         }
@@ -595,6 +613,29 @@ if (! function_exists('epsRegicourse')) {
         $db = DB::select(DB::raw("exec Academic.dbo.eps_regicourse :sems, :course_code"),[
             ':sems' => $sems,
             ':course_code' => $course_code,
+        ]);
+
+        $db = json_decode(json_encode($db), true);
+
+        if ( ! empty($db)) {
+            return $db;
+        } else {
+            return [];
+        }
+    }
+}
+
+if (! function_exists('epsTeacherPage')) {
+    /**
+     * 取得教師代碼
+     *
+     * @return array
+     */
+    function epsTeacherPage($dept_name, $teacher_name)
+    {
+        $db = DB::select(DB::raw("exec Academic.dbo.eps_teacher_page :dept_name, :teacher_name"),[
+            ':dept_name' => $dept_name,
+            ':teacher_name' => $teacher_name,
         ]);
 
         $db = json_decode(json_encode($db), true);
