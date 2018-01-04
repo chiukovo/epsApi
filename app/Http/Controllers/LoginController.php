@@ -10,6 +10,14 @@ class LoginController extends Controller
     /*
      * login
      */
+    public function index()
+    {
+        echo 'welcome to api server :D';
+    }
+
+    /*
+     * login
+     */
     public function auth()
     {
         $userPost = Request::input();

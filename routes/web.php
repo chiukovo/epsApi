@@ -10,6 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/', 'LoginController@index');
 
 Route::group(['prefix' => 'api'], function () {
     Route::post('login/auth', 'LoginController@auth');
