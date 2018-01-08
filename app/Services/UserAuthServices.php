@@ -51,7 +51,7 @@ class UserAuthServices
                 ];
             }
 
-            if ($teacher['teacher_pwd'] == '0x' . md5($userPost['password'])) {
+            if ($teacher['teacher_pwd'] == '0x' . strtoupper(md5($userPost['password']))) {
                 return [
                     'status' => 'success',
                     'data' => [
